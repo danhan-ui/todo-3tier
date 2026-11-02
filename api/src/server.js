@@ -14,6 +14,13 @@ const pool = new Pool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  // DB가 재시작 중이면 접속이 무한정 걸릴 수 있으므로 제한 (재시도는 waitForDb / 다음 요청이 담당)
+  connectionTimeoutMillis: 5000,
+});
+
+// DB가 재시작되면 쉬고 있던 연결이 끊기며 error 이벤트가 온다. 처리하지 않으면 프로세스가 죽음
+pool.on('error', (err) => {
+  console.error('DB 유휴 연결 오류 (다음 요청 때 다시 연결):', err.message);
 });
 
 async function initDb() {
