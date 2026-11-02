@@ -78,14 +78,16 @@ bash deploy/vm/setup.sh
 
 확인:
 
+> 이 VM은 80/443 포트를 kind 클러스터(4단계)가 쓰고 있어서, Nginx는 **8090** 포트를 씁니다 (`WEB_PORT`로 변경 가능).
+
 ```bash
-curl localhost/api/todos
+curl localhost:8090/api/todos
 sudo reboot        # 다시 접속 후
-curl localhost/api/todos
+curl localhost:8090/api/todos
 systemctl status todo-api
 ```
 
-브라우저: VS Code Remote-SSH의 **PORTS** 탭에서 80번 포트를 전달하고 열기.
+브라우저: VS Code Remote-SSH의 **PORTS** 탭에서 8090번 포트를 전달하고 열기.
 
 ---
 
