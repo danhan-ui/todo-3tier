@@ -119,6 +119,30 @@ docker compose up -d
 curl localhost:8090/api/todos
 ```
 
+## 4단계: Kubernetes (kind)
+
+VM의 kind 클러스터 `lab`(lab 폴더에서 `make up`, Ingress는 `make ingress`의 Traefik)에 배포합니다.
+클러스터에 이전 실습의 `todo` 네임스페이스가 있어서 **`todo-3tier`** 네임스페이스를 씁니다.
+
+| 파일 | 리소스 |
+|---|---|
+| `k8s/00-namespace.yaml` | Namespace `todo-3tier` |
+| `k8s/10-config.yaml` | ConfigMap `todo-config` (DB 주소·계정·이름, 포트) |
+| (deploy.sh가 생성) | Secret `todo-db` (DB 비밀번호, `.env`에서 읽음) |
+| `k8s/20-db.yaml` | db Deployment + Service + PVC `db-data` |
+| `k8s/30-api.yaml` | api Deployment + Service |
+| `k8s/40-web.yaml` | web Deployment + Service |
+| `k8s/50-ingress.yaml` | Ingress: `/api` → api, `/` → web |
+
+실행 (3단계의 `.env`와 이미지를 그대로 씀):
+
+```bash
+bash k8s/deploy.sh
+curl localhost/api/todos
+```
+
+데이터 유지 확인: `kubectl -n todo-3tier delete pod -l app=db` 후 다시 `curl localhost/api/todos`
+
 ---
 
 웹 개발 서버는 `/api` 요청을 `http://localhost:3000`으로 전달합니다 (`web/vite.config.js`).

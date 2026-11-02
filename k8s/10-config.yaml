@@ -1,0 +1,12 @@
+# 비밀이 아닌 설정. DB 비밀번호는 Secret 'todo-db' (deploy.sh 가 .env 에서 생성, Git에 올리지 않음)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todo-config
+  namespace: todo-3tier
+data:
+  PORT: "3000"
+  DB_HOST: db
+  DB_PORT: "5432"
+  DB_USER: todo
+  DB_NAME: todo

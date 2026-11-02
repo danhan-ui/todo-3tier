@@ -1,0 +1,5 @@
+# 클러스터에 이미 'todo' 네임스페이스(이전 실습)가 있어서 따로 분리
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: todo-3tier
