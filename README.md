@@ -89,6 +89,36 @@ systemctl status todo-api
 
 브라우저: VS Code Remote-SSH의 **PORTS** 탭에서 8090번 포트를 전달하고 열기.
 
+## 3단계: Docker Compose
+
+| 서비스 | 이미지 | 설명 |
+|---|---|---|
+| `web` | `todo-web:1.0` (`web/Dockerfile`) | React 빌드 + Nginx. `/api/`는 `api:3000`으로 전달 (`web/nginx.conf`) |
+| `api` | `todo-api:1.0` (`api/Dockerfile`) | Express |
+| `db` | `postgres:17-alpine` (공식 이미지) | 데이터는 볼륨 `db-data`에 저장 |
+
+먼저 2단계 서비스를 멈춰서 포트가 겹치지 않게 합니다:
+
+```bash
+sudo systemctl disable --now todo-api nginx postgresql
+```
+
+실행:
+
+```bash
+cp .env.example .env    # DB_PASSWORD 수정
+docker compose up -d --build
+curl localhost:8090/api/todos
+```
+
+데이터 유지 확인:
+
+```bash
+docker compose down     # 볼륨은 남음 (down -v 는 데이터까지 삭제하니 주의)
+docker compose up -d
+curl localhost:8090/api/todos
+```
+
 ---
 
 웹 개발 서버는 `/api` 요청을 `http://localhost:3000`으로 전달합니다 (`web/vite.config.js`).
