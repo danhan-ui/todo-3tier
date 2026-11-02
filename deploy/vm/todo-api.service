@@ -1,0 +1,17 @@
+# setup.sh 가 __USER__ / __API_DIR__ / __NODE__ 를 채워서 /etc/systemd/system/ 에 설치
+[Unit]
+Description=Todo API (Express)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=__USER__
+WorkingDirectory=__API_DIR__
+EnvironmentFile=__API_DIR__/.env
+ExecStart=__NODE__ src/server.js
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

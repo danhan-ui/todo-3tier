@@ -59,5 +59,35 @@
 
 4. 브라우저에서 http://localhost:5173 → 할 일 추가 → 새로고침해도 남아 있으면 성공
 
+## 2단계: VM에 직접 설치
+
+VM(Ubuntu)에서:
+
+```bash
+git clone <저장소 URL> ~/todo
+cd ~/todo
+bash deploy/vm/setup.sh
+```
+
+`setup.sh`가 하는 일:
+- apt로 Nginx·PostgreSQL 설치, NodeSource로 Node.js 22 설치
+- `api/.env`가 없으면 무작위 DB 비밀번호로 만들고, 그 값으로 DB 계정/DB 생성
+- `web`을 빌드해서 `/var/www/todo`에 복사 → Nginx가 제공 (`deploy/vm/nginx-todo.conf`)
+- API를 systemd 서비스 `todo-api`로 등록 (`deploy/vm/todo-api.service`) → 재부팅 후 자동 시작
+- Nginx가 `/api/`를 `127.0.0.1:3000`으로 전달
+
+확인:
+
+```bash
+curl localhost/api/todos
+sudo reboot        # 다시 접속 후
+curl localhost/api/todos
+systemctl status todo-api
+```
+
+브라우저: VS Code Remote-SSH의 **PORTS** 탭에서 80번 포트를 전달하고 열기.
+
+---
+
 웹 개발 서버는 `/api` 요청을 `http://localhost:3000`으로 전달합니다 (`web/vite.config.js`).
 배포할 때는 `npm run build`로 만든 `web/dist/`를 Nginx가 제공하고, `/api`는 Nginx(2단계) 또는 Ingress(4단계)가 API로 전달합니다.
