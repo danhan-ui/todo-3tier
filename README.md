@@ -29,7 +29,11 @@
 
 ## 1단계: 로컬 실행
 
-1. PostgreSQL에 계정/DB 만들기 (psql에서)
+> Windows PowerShell에서 `npm`이 "스크립트를 실행할 수 없으므로" 오류를 내면 `npm.cmd`로 실행하세요.
+
+1. PostgreSQL에 계정/DB 만들기
+   - Windows: `api/.env`를 만든 뒤 `powershell -ExecutionPolicy Bypass -File .\scripts\init-local-db.ps1` (postgres 관리자 비밀번호를 물어봄)
+   - 또는 psql에 postgres로 접속해서 직접:
 
    ```sql
    CREATE USER todo WITH PASSWORD '원하는비밀번호';

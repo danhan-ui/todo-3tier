@@ -1,5 +1,6 @@
 // 환경 변수: .env 파일이 있으면 읽고, 이미 설정된 값(systemd/compose/k8s)은 덮어쓰지 않음
-require('dotenv').config();
+// 어느 폴더에서 실행하든 api/.env 를 읽도록 경로를 고정
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
 const express = require('express');
 const { Pool } = require('pg');
